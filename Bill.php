@@ -62,11 +62,16 @@ unset($_SESSION['transaction_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Bill - The Coffee Hub</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-       body {
+        body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #c2b280;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f5f1; /* Light coffee-inspired background */
+            color: #4B3D3D; /* Dark brown text */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -76,24 +81,29 @@ unset($_SESSION['transaction_id']);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #6F4E37;
-            padding: 5px 7px;
+            background: #6F4E37; /* Coffee brown */
+            padding: 2px 0px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .header .logo img {
             width: 50px;
             height: auto;
             border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .header .logo img:hover {
+            transform: scale(1.1);
         }
 
         .navbar {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             align-items: center;
         }
 
@@ -101,182 +111,233 @@ unset($_SESSION['transaction_id']);
             color: white;
             text-decoration: none;
             font-size: 18px;
-            padding: 8px 10px;
+            font-weight: 500;
+            padding: 8px 12px;
             transition: color 0.3s, background-color 0.3s;
+            border-radius: 4px;
         }
 
         .navbar a:hover {
             color: #6F4E37;
             background-color: #fff;
-            border-radius: 4px;
         }
 
         .icons {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
         }
 
         .icons a {
             color: white;
-            font-size: 20px;
+            font-size: 22px;
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .icons a:hover {
-            color: #c2b280;
+            color: #D7CCC8;
         }
 
         .bill-container {
-            max-width: 800px;
-            margin: 80px auto 20px;
+            max-width: 900px;
+            margin: 120px auto 40px; /* Adjusted for fixed header */
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            background-color: #e6f7ff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
+
         h1, h2 {
+            font-family: 'Playfair Display', serif;
             color: #6F4E37;
             text-align: center;
         }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            border: 2px solid #6F4E37;
+            border: 1px solid #ddd;
         }
+
         th, td {
             padding: 12px;
-            border: 1px solid #6F4E37;
+            border: 1px solid #ddd;
             text-align: left;
         }
+
         th {
             background-color: #6F4E37;
             color: white;
+            font-weight: 500;
         }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
         .total {
             text-align: right;
-            font-size: 1.2em;
-            margin-top: 20px;
+            font-size: 1.3em;
+            margin-top: 25px;
             color: #6F4E37;
+            font-weight: 500;
         }
+
         .details-section {
             margin-top: 30px;
             border-top: 2px solid #6F4E37;
             padding-top: 20px;
         }
-        .details-section h2 {
-            margin-bottom: 10px;
-        }
+
         .details-section p {
-            margin: 5px 0;
+            margin: 10px 0;
             font-size: 16px;
+            color: #555;
         }
+
         .btn {
             background: #6F4E37;
             color: white;
-            padding: 12px 25px;
+            padding: 14px 30px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            width: 100%;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: background 0.3s, transform 0.3s;
             margin-top: 20px;
         }
+
         .btn:hover {
             background: #5a3f2d;
+            transform: translateY(-2px);
         }
-            /* Footer Styles */
-            .footer {
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .footer {
             text-align: center;
             background: #6F4E37;
             color: white;
-            padding: 10px;
+            padding: 15px;
             position: fixed;
             width: 100%;
             bottom: 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .bill-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
 <header class="header">
-  <a href="index.php" class="logo">
-    <img src="logo.jpg" alt="The Coffee Hub Logo" />
-  </a>
-  <nav class="navbar">
-    <a href="index.php">Home</a>
-    <a href="product.php">Products</a>
-    <a href="review.php">Reviwes</a>
-    <a href="blog.php">Blog</a>
-    <a href="Admin_login.php">Admin</a>
-  </nav>
-  <div class="icons">
-    <a href="search.php"><i class="fas fa-search"></i></a>
-    <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
-  </div>
-</header>
-    <div class="bill-container">
-        <h1>Order Bill</h1>
-
-        <!-- Delivery Details -->
-        <div class="details-section">
-            <h2>Delivery Details</h2>
-            <p><strong>Name:</strong> <?php echo htmlspecialchars($delivery_details['name']); ?></p>
-            <p><strong>Phone:</strong> <?php echo htmlspecialchars($delivery_details['phone']); ?></p>
-            <p><strong>Address:</strong> <?php echo htmlspecialchars($delivery_details['address']); ?></p>
-        </div>
-
-        <!-- Payment Details -->
-        <div class="details-section">
-            <h2>Payment Details</h2>
-            <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($payment_method); ?></p>
-            <?php if ($transaction_id !== 'N/A'): ?>
-                <p><strong>Transaction ID:</strong> <?php echo htmlspecialchars($transaction_id); ?></p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Order Summary -->
-        <h2>Order Summary</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($cart_items as $item): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-                    <td><?php echo htmlspecialchars($item['quantity']); ?></td>
-                    <td>₹<?php echo number_format($item['price'], 2); ?></td>
-                    <td>₹<?php echo number_format($item['subtotal'], 2); ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        
-        <div class="total">
-            <strong>Total Amount: ₹<?php echo number_format($total_amount, 2); ?></strong>
-        </div>
-
-        <!-- Confirmation Message -->
-        <div class="details-section">
-            <h2>Thank You for Your Order!</h2>
-            <p>Your order has been successfully placed. We will process it shortly and deliver it to the provided address.</p>
-        </div>
-
-        <!-- Button to Return to Home -->
-        <button class="btn" onclick="window.location.href='index.php'">Return to Home</button>
+    <a href="index.php" class="logo">
+        <img src="logo.jpg" alt="The Coffee Hub Logo" />
+    </a>
+    <nav class="navbar">
+        <a href="index.php">Home</a>
+        <a href="product.php">Products</a>
+        <a href="review.php">Reviews</a>
+        <a href="blog.php">Blog</a>
+        <a href="Admin_login.php">Admin</a>
+    </nav>
+    <div class="icons">
+        <a href="search.php"><i class="fas fa-search"></i></a>
+        <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
     </div>
+</header>
+
+<div class="bill-container">
+    <h1>Order Bill</h1>
+
+    <!-- Delivery Details -->
+    <div class="details-section">
+        <h2>Delivery Details</h2>
+        <p><strong>Name:</strong> <?php echo htmlspecialchars($delivery_details['name']); ?></p>
+        <p><strong>Phone:</strong> <?php echo htmlspecialchars($delivery_details['phone']); ?></p>
+        <p><strong>Address:</strong> <?php echo htmlspecialchars($delivery_details['address']); ?></p>
+    </div>
+
+    <!-- Payment Details -->
+    <div class="details-section">
+        <h2>Payment Details</h2>
+        <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($payment_method); ?></p>
+        <?php if ($transaction_id !== 'N/A'): ?>
+            <p><strong>Transaction ID:</strong> <?php echo htmlspecialchars($transaction_id); ?></p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Order Summary -->
+    <h2>Order Summary</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($cart_items as $item): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                <td>₹<?php echo number_format($item['price'], 2); ?></td>
+                <td>₹<?php echo number_format($item['subtotal'], 2); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div class="total">
+        <strong>Total Amount: ₹<?php echo number_format($total_amount, 2); ?></strong>
+    </div>
+
+    <!-- Confirmation Message -->
+    <div class="details-section">
+        <h2>Thank You for Your Order!</h2>
+        <p>Your order has been successfully placed. We will process it shortly and deliver it to the provided address.</p>
+    </div>
+
+    <!-- Button to Return to Home -->
+    <button class="btn" onclick="window.location.href='index.php'">Return to Home</button>
+</div>
+
 <!-- Footer -->
 <div class="footer">
-    &copy; <?php echo date("Y"); ?> Your Company. All rights reserved.
-  </div>
+    &copy; <?php echo date("Y"); ?> The Coffee Hub. All rights reserved.
+</div>
 </body>
 </html>

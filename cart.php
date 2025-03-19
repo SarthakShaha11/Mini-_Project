@@ -122,232 +122,231 @@ $conn->close();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cart - THE COFFEE HUB</title>
-    <link rel="stylesheet" href="Style-1.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* Your existing CSS styles */
+        /* General Styles */
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #c2b280;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f9f6f2, #e0d7cf);
+            color: #4a2c2a;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Header Styles */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #6F4E37;
-            padding: 5px 5px;
+            padding: 2px 0px;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+
         .header .logo img {
             width: 50px;
             height: auto;
             border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .header .logo img:hover {
+            transform: scale(1.05);
         }
 
         .navbar {
             display: flex;
-            gap: 20px;
+            gap: 25px;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
-            font-size: 18px;
-            padding: 8px 10px;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 12px;
             transition: color 0.3s ease;
         }
 
         .navbar a:hover {
-            color: #d9c9b2;
+            color: #f9f6f2;
         }
 
+        /* Icons */
         .icons {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .icons i {
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             transition: color 0.3s ease;
         }
 
         .icons i:hover {
-            color: #d9c9b2;
+            color: #f9f6f2;
         }
 
-        /* Cart Section Styles */
+        /* Cart Container */
         .cart-container {
-            padding: 100px 20px 80px;
-            margin-top: 60px;
-            flex: 1;
-        }
-
-        h1 {
-            text-align: center;
-            color: #6F4E37;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 90%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            max-width: 1000px;
+            margin: 100px auto 20px;
+            padding: 40px;
             background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
         }
 
-        table, th, td {
-            border: 1px solid #ddd;
+        .cart-container h1 {
+            color: #6F4E37;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+        }
+
+        .cart-container h1::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: #6F4E37;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 2px solid #6F4E37;
         }
 
         th, td {
             padding: 12px;
-            text-align: center;
+            border: 1px solid #6F4E37;
+            text-align: left;
         }
 
         th {
-            background: #6F4E37;
+            background-color: #6F4E37;
             color: white;
-            font-weight: bold;
+            font-weight: 600;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        td[colspan="4"] {
-            text-align: center;
-            font-weight: bold;
-            color: #6F4E37;
+        td {
+            color: #4a2c2a;
         }
 
         .total-row {
             background-color: #f5f5f5;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            font-weight: 600;
         }
 
         .total-row td {
             padding: 15px;
+            text-align: right;
         }
 
         /* Buttons */
         .btn {
-            padding: 10px 15px;
             background: #6F4E37;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-            display: inline-block;
+            color: white;
+            padding: 12px 25px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 16px;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
         .btn:hover {
             background: #56372e;
+            transform: translateY(-2px);
         }
 
-        .action-btns {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px auto;
-        }
-
-        .action-btns form {
-            display: inline-block;
-        }
-
-        /* Footer Styles */
-        .footer {
-            text-align: center;
-            background: #6F4E37;
-            color: white;
-            padding: 10px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            table {
-                width: 100%;
-            }
-
-            .header {
-                padding: 10px;
-            }
-
-            .navbar a {
-                font-size: 16px;
-            }
-
-            .icons i {
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .cart-container {
-                padding: 80px 10px 60px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .btn {
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-
-            .action-btns {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-
-        /* Remove Button Styles */
         .btn-danger {
             background: #dc3545;
             color: white;
             padding: 8px 12px;
             border-radius: 4px;
             text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            transition: background 0.3s;
+            transition: background 0.3s ease;
         }
 
         .btn-danger:hover {
             background: #c82333;
         }
-        /* ... (same as before) ... */
+
+        .action-btns {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            background: #6F4E37;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer .social-icons {
+            margin-top: 10px;
+        }
+
+        .footer .social-icons a {
+            color: white;
+            font-size: 20px;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer .social-icons a:hover {
+            color: #f9f6f2;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
-
     <!-- Header -->
     <header class="header">
         <a href="index.php" class="logo">
@@ -356,7 +355,7 @@ $conn->close();
         <nav class="navbar">
             <a href="index.php">Home</a>
             <a href="Product.php">Products</a>
-            <a href="review.php">Reviwes</a>
+            <a href="review.php">Reviews</a>
             <a href="blog.php">Blog</a>
             <a href="Admin_login.php">Admin</a>
         </nav>
@@ -366,7 +365,7 @@ $conn->close();
         </div>
     </header>
 
-    <!-- Cart Section -->
+    <!-- Cart Container -->
     <section class="cart-container">
         <h1>Your Cart</h1>
 
@@ -419,12 +418,17 @@ $conn->close();
             echo '<p>Your cart is empty.</p>';
         }
         ?>
-    </section> 
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 The Coffee Hub. All rights reserved.</p>
+        <p>&copy; <?php echo date("Y"); ?> The Coffee Hub. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
     </footer>
-
 </body>
 </html>

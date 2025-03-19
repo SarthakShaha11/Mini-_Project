@@ -122,72 +122,113 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Order Details - The Coffee Hub</title>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* Your existing CSS styles */
+        /* General Styles */
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #c2b280;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f9f6f2, #e0d7cf);
+            color: #4a2c2a;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #6F4E37;
-            padding: 5px 6px;
+            padding: 2px 0px;
             position: fixed;
             width: 100%;
             top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .header .logo img {
             width: 50px;
             height: auto;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .header .logo img:hover {
+            transform: scale(1.05);
         }
 
         .navbar {
             display: flex;
-            gap: 20px;
+            gap: 25px;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
-            font-size: 18px;
-            padding: 8px 10px;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 12px;
+            transition: color 0.3s ease;
         }
 
+        .navbar a:hover {
+            color: #f9f6f2;
+        }
+
+        /* Icons */
         .icons {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .icons i {
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
+            transition: color 0.3s ease;
         }
 
+        .icons i:hover {
+            color: #f9f6f2;
+        }
+
+        /* Order Container */
         .order-container {
             max-width: 800px;
             margin: 100px auto 20px;
+            padding: 40px;
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
         }
 
-        h1 {
+        .order-container h1 {
             color: #6F4E37;
-            margin-bottom: 30px;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
         }
 
+        .order-container h1::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: #6F4E37;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
             text-align: left;
@@ -196,7 +237,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 600;
             color: #6F4E37;
         }
 
@@ -206,12 +247,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
             box-sizing: border-box;
             margin-top: 5px;
             font-size: 16px;
+            transition: border-color 0.3s ease;
         }
 
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            border-color: #6F4E37;
+            outline: none;
+        }
+
+        /* Order Summary */
         .order-summary {
             margin-top: 30px;
             border-top: 2px solid #6F4E37;
@@ -233,6 +283,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         th {
             background-color: #6F4E37;
             color: white;
+            font-weight: 600;
         }
 
         .total {
@@ -240,29 +291,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 1.2em;
             margin-top: 20px;
             color: #6F4E37;
+            font-weight: 600;
         }
 
+        /* Buttons */
         .btn {
             background: #6F4E37;
             color: white;
             padding: 12px 25px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            transition: background 0.3s, transform 0.3s;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
         .btn:hover {
-            background: #5a3f2d;
-            transform: scale(1.05);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
+            background: #56372e;
+            transform: translateY(-2px);
         }
 
         .btn-danger {
@@ -271,99 +317,138 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 8px 12px;
             border-radius: 4px;
             text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            transition: background 0.3s;
+            transition: background 0.3s ease;
         }
 
         .btn-danger:hover {
             background: #c82333;
         }
-        
-        /* Footer Styles */
+
+        /* Footer */
         .footer {
             text-align: center;
             background: #6F4E37;
             color: white;
-            padding: 10px;
+            padding: 0px;
             position: fixed;
             width: 100%;
             bottom: 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .footer .social-icons {
+            margin-top: 10px;
+        }
+
+        .footer .social-icons a {
+            color: white;
+            font-size: 15px;
+            margin: 0 0px;
+            transition: color 0.3s ease;
+        }
+
+        .footer .social-icons a:hover {
+            color: #f9f6f2;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-<header class="header">
-  <a href="index.php" class="logo">
-    <img src="logo.jpg" alt="The Coffee Hub Logo" />
-  </a>
-  <nav class="navbar">
-    <a href="index.php">Home</a>
-    <a href="product.php">Products</a>
-    <a href="review.php">Reviwes</a>
-    <a href="blog.php">Blog</a>
-    <a href="Admin_login.php">Admin</a>
-  </nav>
-  <div class="icons">
-    <a href="search.php"><i class="fas fa-search"></i></a>
-    <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
-  </div>
-</header>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.php" class="logo">
+            <img src="logo.jpg" alt="The Coffee Hub Logo" />
+        </a>
+        <nav class="navbar">
+            <a href="index.php">Home</a>
+            <a href="Product.php">Products</a>
+            <a href="review.php">Reviews</a>
+            <a href="blog.php">Blog</a>
+            <a href="Admin_login.php">Admin</a>
+        </nav>
+        <div class="icons">
+            <i class="fas fa-search"></i>
+            <a href="cart.php"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </header>
 
-<div class="order-container">
-    <h1>Order Details</h1>
-    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-        <div class="form-group">
-            <label for="name">Full Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
-        </div>
-        <div class="form-group">
-            <label for="address">Delivery Address:</label>
-            <textarea id="address" name="address" rows="3" required></textarea>
-        </div>
-
-        <div class="order-summary">
-            <h2>Order Summary</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Subtotal</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($cart_items as $item): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-                        <td><?php echo htmlspecialchars($item['quantity']); ?></td>
-                        <td>₹<?php echo number_format($item['product_price'] ?? 0, 2); ?></td>
-                        <td>₹<?php echo number_format(($item['product_price'] ?? 0) * ($item['quantity'] ?? 0), 2); ?></td>
-                        <td>
-                            <a href="order.php?remove=<?php echo $item['product_id']; ?>" class="btn-danger">Remove</a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <div class="total">
-                <strong>Total Amount: ₹<?php echo number_format($total_amount, 2); ?></strong>
+    <!-- Order Container -->
+    <div class="order-container">
+        <h1>Order Details</h1>
+        <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Delivery Address:</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
 
-        <button type="submit" class="btn">Proceed to Payment</button>
-    </form>
-</div>
- <!-- Footer -->
- <div class="footer">
-    &copy; <?php echo date("Y"); ?> Your Company. All rights reserved.
-  </div>
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($cart_items as $item): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                            <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                            <td>₹<?php echo number_format($item['product_price'] ?? 0, 2); ?></td>
+                            <td>₹<?php echo number_format(($item['product_price'] ?? 0) * ($item['quantity'] ?? 0), 2); ?></td>
+                            <td>
+                                <a href="order.php?remove=<?php echo $item['product_id']; ?>" class="btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="total">
+                    <strong>Total Amount: ₹<?php echo number_format($total_amount, 2); ?></strong>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Proceed to Payment</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; <?php echo date("Y"); ?> The Coffee Hub. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </footer>
 </body>
 </html>
