@@ -1,5 +1,11 @@
 <?php 
 include 'db_connect.php'; 
+
+// Initialize the search variable
+$search_product_id = '';
+if (isset($_GET['search_product_id'])) {
+    $search_product_id = $_GET['search_product_id'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,8 +19,8 @@ include 'db_connect.php';
     <style>
         /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #8e44ad, #3498db);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             margin: 0;
             padding: 0;
@@ -22,14 +28,22 @@ include 'db_connect.php';
 
         /* Sidebar Styles */
         .sidebar {
-            background: #2c3e50;
-            color: rgb(16, 178, 219);
+            background: #1a1a2e;
+            color: white;
             width: 250px;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            text-align: center;
+            font-size: 22px;
+            padding: 20px 0;
+            margin: 0;
+            background: #0f0f1a;
         }
         .sidebar ul {
             list-style: none;
@@ -38,78 +52,109 @@ include 'db_connect.php';
         .sidebar ul li {
             padding: 15px;
             text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         .sidebar ul li a {
             color: white;
             text-decoration: none;
             display: block;
             font-size: 16px;
+            transition: color 0.3s;
         }
-        
-     
+        .sidebar ul li a:hover {
+            color: #3498db;
+        }
+
         /* Main Content Styles */
         .main-content {
             margin-left: 260px;
-            padding: 20px;
+            padding: 30px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
         }
 
         /* Orders Table Styles */
         .orders-table {
             overflow-x: auto;
             border-radius: 10px;
-            background: rgba(13, 108, 224, 0.2);
+            background: rgba(15, 202, 239, 0.9);
             padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            color: black;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+            color: purple;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
         th, td {
-            padding: 12px 15px; /* Add padding for better spacing */
-            text-align: center; /* Center-align text */
-            border-bottom: 1px solid #ddd; /* Add a subtle border between rows */
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         th {
-            background-color: #3498db; /* Blue background for header */
-            color: white; /* White text for header */
-            font-weight: bold; /* Bold text for headers */
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
         }
 
         /* Table Row Styles */
         tr {
-            transition: all 0.3s ease; /* Smooth transition for all properties */
-            background-color:rgb(32, 206, 245); /* Default row background color */
+            transition: all 0.3s ease;
+            background-color: rgba(9, 212, 230, 0.89);
+        
         }
         tr:nth-child(even) {
-            background-color:rgb(126, 155, 168); /* Light gray for even rows */
+            background-color: rgba(9, 109, 230, 0.05);
         }
         tr:hover {
-            background-color:rgb(115, 21, 230); /* Light gray background on hover */
-            transform: scale(1.02); /* Slightly scale up the row */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for a lifted effect */
+            background-color: rgba(38, 166, 239, 0.92);
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Status Column Styles */
-        .status {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            display: inline-block;
-            color: black !important; /* Ensure text is visible */
-            background: rgba(224, 14, 193, 0.9) !important; /* Light background for contrast */
-            border: 1px solid black; /* Add border for better visibility */
-            transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition for status */
+        /* Search Form Styles */
+        .search-form {
+            margin-bottom: 20px;
         }
-        .status.pending { background: #FFD700 !important; color: black !important; } /* Yellow */
-        .status.completed { background: #2ECC71 !important; color: black !important; } /* Green */
-        .status.cancelled { background: #E74C3C !important; color: black !important; } /* Red */
-        .status:hover {
-            transform: scale(1.1); /* Slightly scale up on hover */
-            background-color: rgba(255, 255, 255, 0.7) !important; /* Lighten background on hover */
+        .search-form input[type="text"] {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            width: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .search-form input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-form input[type="submit"]:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
@@ -137,6 +182,11 @@ include 'db_connect.php';
         <main>
             <div class="orders-header">
                 <h3>All Orders</h3>
+                <!-- Search Form -->
+                <form class="search-form" method="GET" action="">
+                    <input type="text" name="search_product_id" placeholder="Enter Product ID" value="<?php echo htmlspecialchars($search_product_id); ?>">
+                    <input type="submit" value="Search">
+                </form>
             </div>
             <div class="orders-table">
                 <table>
@@ -147,34 +197,38 @@ include 'db_connect.php';
                             <th>Quantity</th>
                             <th>Date</th>
                             <th>Price (₹)</th>
-                            <th>Status</th>
+                            <th>Product ID</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
+                        // Build the SQL query based on the search input
                         $query = "
                             SELECT 
-                                o.order_id, 
+                                o.id, 
+                                o.Order_id, 
                                 o.quantity, 
                                 o.order_date, 
                                 o.price, 
-                                o.status 
+                                o.product_id 
                             FROM orders o
-                            ORDER BY o.order_id DESC
-                            LIMIT 20 OFFSET 0
                         ";
+                        if (!empty($search_product_id)) {
+                            $query .= " WHERE o.product_id = " . intval($search_product_id);
+                        }
+                        $query .= " ORDER BY o.id DESC LIMIT 10 OFFSET 0";
+
                         $result = $conn->query($query);
                         $sr_no = 1;
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                $status = $row['status'] ? $row['status'] : "Pending"; // Default value if empty
                                 echo "<tr>
                                     <td>{$sr_no}</td>
-                                    <td>{$row['order_id']}</td>
+                                    <td>{$row['Order_id']}</td>
                                     <td>{$row['quantity']}</td>
                                     <td>{$row['order_date']}</td>
                                     <td>₹{$row['price']}</td>
-                                    <td><span class='status'>{$status}</span></td>
+                                    <td>{$row['product_id']}</td>
                                 </tr>";
                                 $sr_no++;
                             }

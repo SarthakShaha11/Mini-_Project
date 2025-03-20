@@ -3,8 +3,17 @@ include 'db_connect.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Initialize search term
+$search_term = "";
+if (isset($_GET['search'])) {
+    $search_term = $_GET['search'];
+}
+
 // Fetch products from the database
-$sql = "SELECT product_id, name, price, image, stock FROM product"; // Include 'stock' in the query
+$sql = "SELECT product_id, name, price, image, stock FROM product";
+if (!empty($search_term)) {
+    $sql .= " WHERE name LIKE '%" . $conn->real_escape_string($search_term) . "%'";
+}
 $result = $conn->query($sql);
 ?>
 
@@ -17,206 +26,240 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Your existing CSS styles */
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+              background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* Global Styles */
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(to right, #8e44ad, #3498db);
-        color: white;
-        margin: 0;
-        padding: 0;
-    }
+        /* Sidebar Styles */
+        .sidebar {
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Sidebar Styles */
-    .sidebar {
-        background: #2c3e50;
-        color: white;
-        width: 250px;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        top: 0;
-        transition: all 0.3s;
-    }
+        .sidebar h2 {
+            text-align: center;
+            font-size: 22px;
+            padding: 20px 0;
+            margin: 0;
+            background: #0f0f1a;
+        }
 
-    .sidebar h2 {
-        text-align: center;
-        font-size: 22px;
-        padding: 20px 0;
-        margin: 0;
-        background: #1a252f;
-    }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-    .sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+        .sidebar ul li {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s;
+        }
 
-    .sidebar ul li {
-        padding: 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        transition: background 0.3s;
-    }
+        .sidebar ul li:hover {
+            background: #0f0f1a;
+        }
 
-    .sidebar ul li:hover {
-        background: #1a252f;
-    }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+        }
 
-    .sidebar ul li a {
-        color: white;
-        text-decoration: none;
-        display: block;
-        font-size: 16px;
-    }
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
 
-    .sidebar ul li a i {
-        margin-right: 10px;
-    }
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
 
-    /* Main Content Styles */
-    .main-content {
-        margin-left: 250px;
-        padding: 20px;
-    }
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Header Styles */
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
+        header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #ffffff;
+        }
 
-    header h2 {
-        margin: 0;
-        font-size: 24px;
-    }
+        .user-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .user-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+        .admin-profile {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #3498db;
+        }
 
-    .admin-profile {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid white;
-    }
+        .user-info h4 {
+            margin: 0;
+            font-size: 16px;
+        }
 
-    .user-info h4 {
-        margin: 0;
-        font-size: 16px;
-    }
+        .user-info small {
+            color: #ddd;
+        }
 
-    .user-info small {
-        color: #ddd;
-    }
+        /* Products Header Styles */
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    /* Products Header Styles */
-    .products-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
+        .products-header h3 {
+            font-size: 24px;
+            margin: 0;
+            color: #ffffff;
+        }
 
-    .products-header h3 {
-        font-size: 24px;
-        margin: 0;
-    }
+        .products-header button {
+            background: #27ae60;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
 
-    .products-header button {
-        background: #27ae60;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: background 0.3s;
-    }
+        .products-header button:hover {
+            background: #2ecc71;
+        }
 
-    .products-header button:hover {
-        background: #2ecc71;
-    }
+        /* Search Form Styles */
+        .search-form {
+            margin-bottom: 20px;
+        }
 
-    /* Table Styles */
-    .products-table table {
-        width: 100%;
-        border-collapse: collapse;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
-    }
+        .search-form input[type="text"] {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            width: 300px;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
 
-    .products-table th,
-    .products-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
+        .search-form button {
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-    .products-table th {
-        background: rgba(41, 128, 185, 0.8);
-        color: white;
-    }
+        .search-form button:hover {
+            background: #2980b9;
+        }
 
-    /* Row Hover Effect */
-    .products-table tbody tr {
-        transition: background-color 0.3s;
-    }
+        /* Table Styles */
+        .products-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
+            color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    .products-table tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        cursor: pointer;
-    }
+        .products-table th,
+        .products-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+            color: white; /* Ensure text color is white */
+        }
 
-    /* Button Styles */
-    .btn {
-        padding: 8px 12px;
-        border-radius: 5px;
-        text-decoration: none;
-        display: inline-block;
-        transition: opacity 0.3s;
-    }
+        .products-table th {
+            background: rgba(255, 255, 255, 0.2); /* Semi-transparent header background */
+            color: white;
+            font-weight: bold;
+        }
 
-    .edit-btn {
-        background: #f39c12;
-        color: white;
-    }
+        /* Row Hover Effect */
+        .products-table tbody tr {
+            transition: background-color 0.3s;
+        }
 
-    .delete-btn {
-        background: #e74c3c;
-        color: white;
-    }
+        .products-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.93); /* Hover effect */
+            cursor: pointer;
+        }
 
-    .btn:hover {
-        opacity: 0.8;
-    }
+        /* Button Styles */
+        .btn {
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.3s;
+        }
 
-    /* Image Styles */
-    .product-img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 5px;
-    }
+        .edit-btn {
+            background: #f39c12;
+            color: white;
+        }
 
-    /* Feedback Message Styles */
-    .feedback {
-        text-align: center;
-        margin: 20px 0;
-        font-size: 18px;
-        color: #6F4E37;
-    }
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
 
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Image Styles */
+        .product-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* Feedback Message Styles */
+        .feedback {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #6F4E37;
+        }
     </style>
 </head>
 <body>
@@ -253,6 +296,14 @@ $result = $conn->query($sql);
                 <button id="addProductBtn">Add Product</button>
             </div>
 
+            <!-- Search Form -->
+            <div class="search-form">
+                <form method="GET" action="">
+                    <input type="text" name="search" placeholder="Search by Product Name" value="<?php echo htmlspecialchars($search_term); ?>">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
             <div class="products-table">
                 <table>
                     <thead>
@@ -261,9 +312,8 @@ $result = $conn->query($sql);
                             <th>Name</th>
                             <th>Price</th>
                             <th>Image</th>
-                            <th>Stock</th> <!-- New column for stock -->
+                            <th>Stock</th>
                             <th>Actions</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -275,7 +325,7 @@ $result = $conn->query($sql);
                                         <td>{$row['name']}</td>
                                         <td>₹" . number_format($row['price'], 2) . "</td>
                                         <td><img src='uploads/{$row['image']}' alt='{$row['name']}' class='product-img'></td>
-                                        <td>{$row['stock']}</td> <!-- Display stock -->
+                                        <td>{$row['stock']}</td>
                                         <td>
                                             <a href='edit_product.php?id={$row["product_id"]}' class='btn edit-btn'>Edit</a>
                                             <a href='delete_product.php?id={$row["product_id"]}' class='btn delete-btn' onclick='return confirm(\"Are you sure you want to delete this product?\")'>Delete</a>
@@ -283,7 +333,7 @@ $result = $conn->query($sql);
                                       </tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>No products available.</td></tr>"; // Update colspan to 6
+                            echo "<tr><td colspan='6'>No products available.</td></tr>";
                         }
                         ?>
                     </tbody>

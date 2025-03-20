@@ -23,61 +23,77 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #8e44ad, #3498db);
-            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: white;
             margin: 0;
             padding: 0;
         }
 
+        /* Sidebar Styles */
         .sidebar {
-            background: #2c3e50;
-            color: rgb(16, 178, 219);
-            width: 200px;
+            background: #1a1a2e;
+            color: white;
+            width: 250px;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
-
         .sidebar h2 {
             text-align: center;
-            color: white;
+            font-size: 22px;
+            padding: 20px 0;
+            margin: 0;
+            background: #0f0f1a;
         }
-
         .sidebar ul {
             list-style: none;
             padding: 0;
         }
-
         .sidebar ul li {
             padding: 15px;
-            text-align: left;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .sidebar ul li a {
-            color: rgb(19, 161, 197);
+            color: white;
             text-decoration: none;
             display: block;
+            font-size: 16px;
+            transition: color 0.3s;
         }
-
         .sidebar ul li a:hover {
-            background: #34495e;
+            color: #3498db;
         }
 
+        /* Main Content Styles */
         .main-content {
-            margin-left: 200px; /* Adjusted to match sidebar width */
-            padding: 20px;
+            margin-left: 260px;
+            padding: 30px;
         }
 
+        /* Header Styles */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
         }
 
         .user-wrapper {
@@ -85,52 +101,78 @@ $result = $conn->query($sql);
             align-items: center;
             gap: 10px;
         }
-
         .admin-profile {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid white;
+            border: 2px solid #3498db;
+        }
+        .user-info h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .user-info small {
+            color: #ddd;
         }
 
-        h1 {
-            text-align: center;
-            color: #5a3a22;
+        /* Reviews Table Styles */
+        .reviews-table {
+            overflow-x: auto;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
-
-        table th, table td {
-            padding: 12px;
+        th, td {
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
-            color: #000; /* Ensure text is visible */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
         }
 
-        table th {
-            background-color: #5a3a22;
-            color: #fff;
+        /* Table Row Styles */
+        tr {
+            transition: all 0.3s ease;
+        }
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        table tr:hover {
-            background-color: #f9f9f9;
+        /* Rating Stars */
+        .rating {
+            color: #f39c12;
         }
 
+        /* No Reviews Message */
         .no-reviews {
             text-align: center;
-            color: #777;
+            color: #ddd;
             margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
     <div class="sidebar">
         <h2>The Coffee Hub</h2>
         <ul>
@@ -139,48 +181,52 @@ $result = $conn->query($sql);
             <li><a href="orders.php"><i class="fas fa-receipt"></i> Orders</a></li>
             <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="report.php"><i class="fas fa-chart-line"></i> Report</a></li>
-            <li><a href="admin_reviews.php"><i class="fas fa-sign-out-alt"></i> Reviews</a></li>
+            <li><a href="admin_reviews.php" class="active"><i class="fas fa-sign-out-alt"></i> Reviews</a></li>
             <li><a href="add_blog.php"><i class="fas fa-sign-out-alt"></i> Blogs</a></li>
             <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
+
+    <!-- Main Content -->
     <div class="main-content">
         <header>
-            <h2>Dashboard</h2>
+            <h2>Admin Reviews</h2>
             <div class="user-wrapper">
                 <img src="admin.jpg" alt="Admin" class="admin-profile">
-                <div>
+                <div class="user-info">
                     <h4>Sarthak</h4>
                     <small>Super Admin</small>
                 </div>
             </div>
         </header>
-        <h1>Admin Reviews</h1>
-        <?php
-        if ($result->num_rows > 0) {
-            // Display reviews in a table
-            echo "<table>";
-            echo "<tr>
-                    <th>ID</th>
-                    <th>User Name</th>
-                    <th>Rating</th>
-                    <th>Review Text</th>
-                    <th>Posted On</th>
-                  </tr>";
-            while ($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($row['id']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
-                echo "<td>" . str_repeat("★", $row['rating']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['review_text']) . "</td>";
-                echo "<td>" . $row['created_at'] . "</td>";
-                echo "</tr>";
+
+        <div class="reviews-table">
+            <?php
+            if ($result->num_rows > 0) {
+                // Display reviews in a table
+                echo "<table>";
+                echo "<tr>
+                        <th>ID</th>
+                        <th>User Name</th>
+                        <th>Rating</th>
+                        <th>Review Text</th>
+                        <th>Posted On</th>
+                      </tr>";
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
+                    echo "<td><span class='rating'>" . str_repeat("★", $row['rating']) . "</span></td>";
+                    echo "<td>" . htmlspecialchars($row['review_text']) . "</td>";
+                    echo "<td>" . $row['created_at'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+            } else {
+                echo "<p class='no-reviews'>No reviews found.</p>";
             }
-            echo "</table>";
-        } else {
-            echo "<p class='no-reviews'>No reviews found.</p>";
-        }
-        ?>
+            ?>
+        </div>
     </div>
 </body>
 </html>

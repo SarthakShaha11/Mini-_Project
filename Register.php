@@ -32,12 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate username
     if (!validateUsername($username)) {
-        $error_message = "Username can only contain letters.";
+        $error_message = "Username can only contain letters."; //  only chartacter value enterd  
     }
     // Validate phone number
     else if (!preg_match("/^\d{10}$/", $phone)) {
-        $error_message = "Please enter a valid 10-digit phone number.";
+        $error_message = "Please enter a valid 10-digit phone number."; // only number value enterd 
     }
+
     else {
         // Check if username or email already exists
         $check_sql = "SELECT * FROM usertable WHERE user_name = ? OR email = ? OR phone_no = ?";
@@ -53,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insert_sql = "INSERT INTO usertable (user_name, email, password, phone_no) VALUES (?, ?, ?, ?)";
             $insert_stmt = $conn->prepare($insert_sql);
             $insert_stmt->bind_param("ssss", $username, $email, $password, $phone);
-
+            // Check Erorr or not 
             if ($insert_stmt->execute()) {
                 $success_message = "Registration successful! Redirecting to login...";
                 header("refresh:2;url=login.php");
@@ -79,7 +80,7 @@ $conn->close();
   <style>
     /* Import Google Font */
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
-    
+  
     /* Global Styling */
     body {
       font-family: 'Nunito', sans-serif;
@@ -215,6 +216,7 @@ $conn->close();
         font-size: 24px;
       }
     }
+
   </style>
 </head>
 <body>
@@ -337,6 +339,7 @@ $conn->close();
         }, 5000);
       });
     });
+
   </script>
 </body>
 </html>

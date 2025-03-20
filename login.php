@@ -164,7 +164,7 @@ $conn->close();
 </head>
 <body>
     <div class="form-container">
-        <h1>Welcome Back</h1>
+        <h1>Login</h1>
         
         <?php if (isset($error_message)): ?>
             <div class="error-message">

@@ -19,6 +19,7 @@ if (isset($_GET['id'])) {
         $name = $row['name'];
         $price = $row['price'];
         $image = $row['image'];
+        $stock = $row['stock']; // Fetch the stock value
     } else {
         echo "Product not found.";
         exit();
@@ -32,6 +33,7 @@ if (isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_name = $_POST['name'];
     $new_price = $_POST['price'];
+    $new_stock = $_POST['stock']; // Get the new stock value
 
     // Handle image upload
     if ($_FILES['image']['name']) {
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Update product in the database
-    $update_sql = "UPDATE product SET name = '$new_name', price = $new_price, image = '$new_image' WHERE Product_id = $product_id";
+    $update_sql = "UPDATE product SET name = '$new_name', price = $new_price, image = '$new_image', stock = $new_stock WHERE Product_id = $product_id";
     if ($conn->query($update_sql) === TRUE) {
         echo "Product updated successfully!";
         header("Location: products.php"); // Redirect back to the products page
@@ -149,6 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <label for="price">Price:</label>
                     <input type="number" id="price" name="price" step="0.01" value="<?php echo $price; ?>" required>
+
+                    <label for="stock">Stock:</label>
+                    <input type="number" id="stock" name="stock" value="<?php echo $stock; ?>" required>
 
                     <label for="image">Product Image:</label>
                     <input type="file" id="image" name="image">

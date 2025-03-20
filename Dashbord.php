@@ -16,6 +16,11 @@ $orderCountQuery = "SELECT COUNT(order_id) as total FROM orders";
 $orderCountResult = $conn->query($orderCountQuery);
 $orderCount = ($orderCountResult && $orderCountResult->num_rows > 0) ? $orderCountResult->fetch_assoc()['total'] : 0;
 
+// Fetch total revenue
+$totalRevenueQuery = "SELECT SUM(price) as total_revenue FROM orders";
+$totalRevenueResult = $conn->query($totalRevenueQuery);
+$total_revenue = ($totalRevenueResult && $totalRevenueResult->num_rows > 0) ? $totalRevenueResult->fetch_assoc()['total_revenue'] : 0;
+
 // Fetch first 5 orders (using correct column names)
 $recentOrdersQuery = "SELECT order_id, customer_name, product_name, price FROM orders ORDER BY order_id ASC LIMIT 5";
 $recentOrdersResult = $conn->query($recentOrdersQuery);
@@ -35,7 +40,7 @@ $newCustomersResult = $conn->query($newCustomersQuery);
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #8e44ad, #3498db);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: #ffffff;
             margin: 0;
             padding: 0;
@@ -44,19 +49,21 @@ $newCustomersResult = $conn->query($newCustomersQuery);
         }
 
         .sidebar {
-            background: #2c3e50;
-            color: rgb(16, 178, 219);
+            background: rgba(44, 62, 80, 0.9);
+            color: #ffffff;
             width: 250px;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar h2 {
             text-align: center;
             color: white;
+            margin-bottom: 30px;
         }
 
         .sidebar ul {
@@ -70,26 +77,27 @@ $newCustomersResult = $conn->query($newCustomersQuery);
         }
 
         .sidebar ul li a {
-            color: rgb(19, 161, 197);
+            color: #ffffff;
             text-decoration: none;
             display: block;
+            transition: color 0.3s;
         }
 
         .sidebar ul li a:hover {
-            background: #34495e;
+            color: #3498db;
         }
 
         .main-content {
             margin-left: 250px;
             flex: 1;
-            padding: 20px;
+            padding: 30px;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .user-wrapper {
@@ -103,38 +111,49 @@ $newCustomersResult = $conn->query($newCustomersQuery);
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid white;
+            border: 2px solid #3498db;
         }
 
         .cards {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .card-single {
-            background: #2980b9;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             flex: 1;
             margin: 0 10px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
             text-align: center;
-            color: white; /* Ensure text is visible */
+            color: #ffffff;
         }
 
         .card-single:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-single h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card-single span {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .recent-orders, .latest-customers {
-            margin-top: 20px;
-            background: white;
-            color: black;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         table {
@@ -143,14 +162,22 @@ $newCustomersResult = $conn->query($newCustomersQuery);
         }
 
         table, th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px;
             text-align: left;
         }
 
         th {
-            background: #2980b9;
-            color: white;
+            background: rgba(255, 255, 255, 0.93);
+            color: #ffffff;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.88);
+        }
+
+        tr:hover {
+            background: rgba(236, 230, 230, 0.93);
         }
     </style>
 </head>
@@ -185,7 +212,7 @@ $newCustomersResult = $conn->query($newCustomersQuery);
             <div class="cards">
                 <div class="card-single"><h3><?php echo $orderCount; ?></h3><span>Orders</span></div>
                 <div class="card-single"><h3><?php echo $customerCount; ?></h3><span>Customers</span></div>
-                <div class="card-single"><h3>$6,000</h3><span>Revenue</span></div>
+                <div class="card-single"><h3>Rs <?php echo number_format($total_revenue, 2); ?></h3><span>Total Revenue</span></div>
                 <div class="card-single"><h3><?php echo $productCount; ?></h3><span>Products</span></div>
             </div>
 

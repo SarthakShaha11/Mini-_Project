@@ -82,6 +82,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Please fill in all fields.");
     }
 
+    // Validate phone number length
+    if (strlen($phone) != 10) {
+        die("Phone number must be exactly 10 digits.");
+    }
+
     // Store delivery details in session
     $_SESSION['delivery_details'] = [
         'name' => $name,
@@ -398,7 +403,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="form-group">
                 <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10" required>
             </div>
             <div class="form-group">
                 <label for="address">Delivery Address:</label>
@@ -435,7 +440,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <strong>Total Amount: ₹<?php echo number_format($total_amount, 2); ?></strong>
                 </div>
             </div>
-
+ 
             <button type="submit" class="btn">Proceed to Payment</button>
         </form>
     </div>

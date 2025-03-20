@@ -298,7 +298,7 @@ $result = $conn->query($sql);
   <p>&copy; 2024 The Coffee Hub. All rights reserved.</p>
 </footer>
 
-<script src="Script-1.js"></script>
+<script src="Script1.js"></script>
 
 </body>
 </html>

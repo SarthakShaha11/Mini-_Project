@@ -49,92 +49,137 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #8e44ad, #3498db);
-            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: white;
             margin: 0;
             padding: 0;
             display: flex;
             min-height: 100vh;
         }
 
+        /* Sidebar Styles */
         .sidebar {
-            background: #2c3e50;
-            color: rgb(16, 178, 219);
+            background: #1a1a2e;
+            color: white;
             width: 250px;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
-
         .sidebar h2 {
             text-align: center;
-            color: white;
+            font-size: 22px;
+            padding: 20px 0;
+            margin: 0;
+            background: #0f0f1a;
         }
-
         .sidebar ul {
             list-style: none;
             padding: 0;
         }
-
         .sidebar ul li {
             padding: 15px;
-            text-align: left;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .sidebar ul li a {
-            color: rgb(19, 161, 197);
+            color: white;
             text-decoration: none;
             display: block;
+            font-size: 16px;
+            transition: color 0.3s;
         }
-
         .sidebar ul li a:hover {
-            background: #34495e;
+            color: #3498db;
         }
 
+        /* Main Content Styles */
         .main-content {
-            margin-left: 250px;
+            margin-left: 260px;
+            padding: 30px;
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
         }
 
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+
+        .user-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-profile {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #3498db;
+        }
+        .user-info h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .user-info small {
+            color: #ddd;
+        }
+
+        /* Container Styles */
         .container {
             max-width: 800px;
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         h1 {
             margin-top: 0;
-            color: #ffffff;
+            color: white;
         }
 
+        /* Form Styles */
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: #ffffff;
+            color: white;
         }
 
         input[type="text"], textarea, input[type="file"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.8);
-            color: #000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
         textarea {
@@ -144,35 +189,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         input[type="submit"] {
             background: #28a745;
-            color: #fff;
+            color: white;
             padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         input[type="submit"]:hover {
             background: #218838;
         }
 
+        /* Message Styles */
         .message {
             padding: 10px;
             margin-bottom: 20px;
-            border-radius: 4px;
+            border-radius: 5px;
             text-align: center;
         }
 
         .success {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
         }
 
         .error {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
         }
 
+        /* Uploaded Image Styles */
         .uploaded-image {
             text-align: center;
             margin-top: 20px;
@@ -186,6 +234,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
     <div class="sidebar">
         <h2>The Coffee Hub</h2>
         <ul>
@@ -200,12 +249,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </ul>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content">
         <header>
             <h2>Dashboard</h2>
             <div class="user-wrapper">
                 <img src="admin.jpg" alt="Admin" class="admin-profile">
-                <div>
+                <div class="user-info">
                     <h4>Sarthak</h4>
                     <small>Super Admin</small>
                 </div>

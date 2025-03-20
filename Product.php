@@ -1,5 +1,5 @@
-<?php
-session_start();
+    <?php
+    session_start();
 
 // Database connection
 $servername   = "localhost";
@@ -388,10 +388,10 @@ $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 
                     // Check if the product is already in the cart
                     $cart_quantity = isset($cart[$product_id]) ? $cart[$product_id] : 0;
-                    $remaining_stock = $available_stock - $cart_quantity;
+                    $remaining_stock = $available_stock - $cart_quantity; // find  how many stock available  
 
                     // Disable the form if the product is out of stock
-                    $is_out_of_stock = ($remaining_stock < 1);
+                    $is_out_of_stock = ($remaining_stock < 1); // Show out of stock 
                     ?>
                     <div class="box">
                         <img src="<?php echo htmlspecialchars($row["image"]); ?>" alt="<?php echo htmlspecialchars($row["name"]); ?>" />
@@ -402,12 +402,13 @@ $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
                                 <?php echo $remaining_stock; ?>
                             </span>
                         </p>
-
+                            // start aftre dinner
+                            
                         <form action="cart.php" method="POST" onsubmit="return validateQuantity(this, <?php echo $remaining_stock; ?>);">
                             <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                             <input type="hidden" name="name" value="<?php echo htmlspecialchars($row["name"]); ?>">
                             <input type="hidden" name="price" value="<?php echo $row["price"]; ?>">
-                            <input type="number" name="quantity" value="1" min="1" max="<?php echo $remaining_stock; ?>" class="quantity-input" <?php echo $is_out_of_stock ? 'disabled' : ''; ?>>
+                            <input type="number" name="quantity" value="0" min="1" max="<?php echo $remaining_stock; ?>" class="quantity-input" <?php echo $is_out_of_stock ? 'disabled' : ''; ?>>
                             <p class="error-message">⚠ Quantity cannot exceed available stock!</p>
                             <button type="submit" class="btn" <?php echo $is_out_of_stock ? 'disabled' : ''; ?>>
                                 <?php echo $is_out_of_stock ? 'Out of Stock' : 'Add to Cart'; ?>
